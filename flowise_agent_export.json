@@ -1,0 +1,238 @@
+{
+    "name": "Agente Experto con RAG y Tools",
+    "nodes": [
+        {
+            "id": "conversationalAgent_0",
+            "data": {
+                "name": "conversationalAgent",
+                "type": "ConversationalAgent",
+                "inputParams": [
+                    {
+                        "name": "tools",
+                        "type": "Tool",
+                        "list": true
+                    },
+                    {
+                        "name": "memory",
+                        "type": "BaseChatMemory",
+                        "label": "Memory"
+                    },
+                    {
+                        "name": "llm",
+                        "type": "BaseChatModel",
+                        "label": "LLM"
+                    }
+                ],
+                "inputs": {
+                    "llm": {
+                        "id": "chatOpenAI_0"
+                    },
+                    "memory": {
+                        "id": "conversationSummaryBufferMemory_0"
+                    },
+                    "tools": [
+                        {
+                            "id": "tool_0"
+                        },
+                        {
+                            "id": "serpApi_0"
+                        }
+                    ]
+                }
+            },
+            "position": {
+                "x": 500,
+                "y": 100
+            }
+        },
+        {
+            "id": "chatOpenAI_0",
+            "data": {
+                "name": "chatOpenAI",
+                "type": "ChatOpenAI",
+                "inputParams": [
+                    {
+                        "name": "modelName",
+                        "type": "string",
+                        "label": "Model Name",
+                        "options": [
+                            "gpt-4o",
+                            "gpt-4-turbo",
+                            "gpt-3.5-turbo"
+                        ],
+                        "default": "gpt-4o"
+                    },
+                    {
+                        "name": "temperature",
+                        "type": "number",
+                        "label": "Temperature",
+                        "default": 0.7
+                    },
+                    {
+                        "name": "openAIApiKey",
+                        "type": "string",
+                        "label": "OpenAI API Key",
+                        "password": true
+                    }
+                ],
+                "inputs": {
+                    "modelName": "gpt-4o",
+                    "temperature": 0.7,
+                    "openAIApiKey": "{{OPENAI_API_KEY}}"
+                }
+            },
+            "position": {
+                "x": 800,
+                "y": 100
+            }
+        },
+        {
+            "id": "conversationSummaryBufferMemory_0",
+            "data": {
+                "name": "conversationSummaryBufferMemory",
+                "type": "ConversationSummaryBufferMemory",
+                "inputParams": [
+                    {
+                        "name": "memoryKey",
+                        "type": "string",
+                        "label": "Memory Key",
+                        "default": "chat_history"
+                    }
+                ],
+                "inputs": {
+                    "memoryKey": "chat_history"
+                }
+            },
+            "position": {
+                "x": 800,
+                "y": 250
+            }
+        },
+        {
+            "id": "tool_0",
+            "data": {
+                "name": "tool",
+                "type": "Tool",
+                "inputParams": [
+                    {
+                        "name": "name",
+                        "type": "string",
+                        "label": "Tool Name",
+                        "default": "BuscadorDeDocumentos"
+                    },
+                    {
+                        "name": "description",
+                        "type": "string",
+                        "label": "Tool Description",
+                        "default": "Úsalo para responder preguntas buscando en los documentos cargados. Los documentos contienen información específica sobre gestión de proyectos de inteligencia artificial."
+                    },
+                    {
+                        "name": "code",
+                        "type": "string",
+                        "label": "Tool Code"
+                    }
+                ],
+                "inputs": {
+                    "name": "BuscadorDeDocumentos",
+                    "description": "Úsalo para responder preguntas buscando en los documentos cargados. Los documentos contienen información específica sobre gestión de proyectos de inteligencia artificial.",
+                    "code": "/* NOTE: Connect the Retrieval QA Chain node to this tool's input */"
+                }
+            },
+            "position": {
+                "x": 200,
+                "y": 300
+            }
+        },
+        {
+            "id": "serpApi_0",
+            "data": {
+                "name": "serpApi",
+                "type": "SerpAPI",
+                "inputParams": [
+                    {
+                        "name": "name",
+                        "type": "string",
+                        "label": "Tool Name",
+                        "default": "BuscadorWeb"
+                    },
+                    {
+                        "name": "description",
+                        "type": "string",
+                        "label": "Tool Description",
+                        "default": "Úsalo para buscar información actualizada en la web cuando la respuesta no se encuentre en los documentos internos o la pregunta se refiera a eventos recientes."
+                    },
+                    {
+                        "name": "serpApiKey",
+                        "type": "string",
+                        "label": "SerpAPI Key",
+                        "password": true
+                    }
+                ],
+                "inputs": {
+                    "name": "BuscadorWeb",
+                    "description": "Úsalo para buscar información actualizada en la web cuando la respuesta no se encuentre en los documentos internos o la pregunta se refiera a eventos recientes.",
+                    "serpApiKey": "{{SERPAPI_KEY}}"
+                }
+            },
+            "position": {
+                "x": 200,
+                "y": 450
+            }
+        },
+        {
+            "id": "chatPromptTemplate_0",
+            "data": {
+                "name": "chatPromptTemplate",
+                "type": "ChatPromptTemplate",
+                "inputParams": [
+                    {
+                        "name": "systemMessage",
+                        "type": "string",
+                        "label": "System Message",
+                        "rows": 4,
+                        "default": "Eres un asistente experto en Gestión de Proyectos de Inteligencia Artificial. Citas fuentes cuando uses RAG (BuscadorDeDocumentos). No inventas datos. Si no encuentras la respuesta en tus herramientas, responde honestamente que no lo sabes."
+                    }
+                ],
+                "inputs": {
+                    "systemMessage": "Eres un asistente experto en Gestión de Proyectos de Inteligencia Artificial. Citas fuentes cuando uses RAG (BuscadorDeDocumentos). No inventas datos. Si no encuentras la respuesta en tus herramientas, responde honestamente que no lo sabes."
+                }
+            },
+            "position": {
+                "x": 500,
+                "y": 400
+            }
+        }
+    ],
+    "edges": [
+        {
+            "source": "chatOpenAI_0",
+            "target": "conversationalAgent_0",
+            "id": "chatOpenAI_0-conversationalAgent_0"
+        },
+        {
+            "source": "conversationSummaryBufferMemory_0",
+            "target": "conversationalAgent_0",
+            "id": "conversationSummaryBufferMemory_0-conversationalAgent_0"
+        },
+        {
+            "source": "tool_0",
+            "target": "conversationalAgent_0",
+            "id": "tool_0-conversationalAgent_0"
+        },
+        {
+            "source": "serpApi_0",
+            "target": "conversationalAgent_0",
+            "id": "serpApi_0-conversationalAgent_0"
+        },
+        {
+            "source": "chatPromptTemplate_0",
+            "target": "conversationalAgent_0",
+            "id": "chatPromptTemplate_0-conversationalAgent_0"
+        }
+    ],
+    "viewport": {
+        "x": 0,
+        "y": 0,
+        "zoom": 1
+    }
+}
